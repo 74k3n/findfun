@@ -1,0 +1,184 @@
+<html lang="en">
+
+{% load staticfiles %}
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>FindFun</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link rel="stylesheet" href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/simple-line-icons/css/simple-line-icons.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="{% static 'css/new-age.min.css' %}">
+
+  </head>
+
+  <body id="page-top">
+
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+      <div class="container fadeOutClass fadeInClass">
+        <a class=" navbar-brand js-scroll-trigger" href="/">FindFun</a>
+        <form id="search" class="form-inline">
+          <input id="searchField" class="form-control mr-sm-2 controls" type="text" placeholder="Pretraga" aria-label="Search">
+        </form>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Menu
+          <i class="fa fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a id="loginBtn" class="nav-link js-scroll-trigger" href="#">Login</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+      <header class="masthead">
+      <div class="container h-100">
+        <div class="row h-100">
+          <div id="map-container" class="col-lg-7 my-auto">
+            <div id="map" class="rounded"></div>
+            <div class="header-content mx-auto">
+              <a id="start" class="btn btn-outline btn-xl js-scroll-trigger">Započnite sa korišćenjem sada</a>
+            </div>
+          </div>
+          <div id="locationInfoContainer">
+            <div id="locationInfo"></div>
+          </div>
+          <div class="listings col-lg-5 my-auto fadeOutClass">
+            <div class="device-container">
+              <div class="device-mockup iphone6_plus portrait white">
+                <div class="device">
+                  <div class="screen">
+                    <img src="{% static 'img/telefonce.png' %}" class="img-fluid" alt="">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    {% include 'map/snippets/loginSnippet.html' %}
+    {% include 'map/snippets/locationModalSnippet.html' %}  
+
+    <script type="text/javascript">
+      
+      function initMap() {       
+
+
+        mapDiv = document.getElementById('map');
+
+
+        var map = new google.maps.Map(mapDiv, {
+          zoom: 12,
+          center: {lat: 43.3209, lng: 21.8958},
+          styles: {% include 'map/snippets/GOOGLE_STYLE.json' %},
+        });
+
+        markers = [];
+
+        {% for item in Locations %}
+
+          var marker = new google.maps.Marker({
+            position: {
+              lat:parseFloat({{ item.lattitude }}), 
+              lng:parseFloat({{ item.longitude }})
+            }
+          });          
+
+          markers.push(marker);
+
+        {% endfor %}
+
+        infoWindow = new google.maps.InfoWindow;
+
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            infoWindow.open(map);
+            map.setCenter(pos);
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, map.getCenter());
+        }
+
+
+
+        var input = document.getElementById('searchField');
+        var searchBox = new google.maps.places.SearchBox(input);
+        
+
+        // Bias the SearchBox results towards current map's viewport.
+        map.addListener('bounds_changed', function() {
+          searchBox.setBounds(map.getBounds());
+        });
+
+        searchBox.addListener('places_changed', function() {
+          var places = searchBox.getPlaces();
+
+          if (places.length == 0) {
+            return;
+          }
+        
+          var bounds = new google.maps.LatLngBounds();
+          places.forEach(function(place) {
+            if (place.geometry.viewport) {
+              // Only geocodes have viewport.
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+          });
+          map.fitBounds(bounds);
+        });
+
+        var markerCluster = new MarkerClusterer(map, markers, { imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+        return false;
+
+
+
+
+
+      }
+
+    </script>
+ 
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+    <script src="{% static 'js/new-age.js' %}"></script>
+    <script src="{% static 'js/customJquery.js' %}"></script>
+
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkASzD9nRMz3jSA7tPmRMZh88ERsoDikU&libraries=places"></script>
+    
+  </body>
+
+</html>

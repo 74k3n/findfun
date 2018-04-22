@@ -32,7 +32,10 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'rest_framework',
-    'home',
+    'mapwidgets',
+    'map',
+    'django.contrib.gis',
+    'django_admin_bootstrapped',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,8 +80,12 @@ WSGI_APPLICATION = 'findfun.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'geodjango',
+        'USER': 'geodjango',
+        'PASSWORD': 'supern0va',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -101,13 +108,30 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+MAP_WIDGETS = {
+    "GooglePointFieldWidget": (
+        ("zoom", 15),
+        ("mapCenterLocationName", "london"),
+        ("GooglePlaceAutocompleteOptions", {'componentRestrictions': {'country': 'uk'}}),
+        ("markerFitZoom", 12),
+    ),
+    "GOOGLE_MAP_API_KEY": "AIzaSyDkASzD9nRMz3jSA7tPmRMZh88ERsoDikU"
+}
+
+CUSTOM_MAP_SETTINGS = {
+    "GooglePointFieldWidget": (
+        ("zoom", 15),
+        ("mapCenterLocation", [60.7177013, -22.6300491]),
+    ),
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Belgrade'
 
 USE_I18N = True
 
@@ -115,6 +139,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Constants
+
+GOOGLE_MAPS_KEY = "AIzaSyDkASzD9nRMz3jSA7tPmRMZh88ERsoDikU"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
