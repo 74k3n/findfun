@@ -2,6 +2,10 @@ html,
 body {
   width: 100%;
   height: 100%;
+  background: url("../img/bg-pattern.png"), #7b4397;
+  background: url("../img/bg-pattern.png"), -webkit-linear-gradient(to left,#018279,#02dcf2);
+  background: url("../img/bg-pattern.png"), linear-gradient(to left,#018279,#02dcf2);
+  background-attachment: fixed;
 }
 
 body {
@@ -55,6 +59,22 @@ section h2 {
   font-size: 50px;
 }
 
+#search{
+  display:none;
+}
+
+#searchField {
+  margin-top:12px;
+}
+
+#map{
+  height:700px;
+  width:100%;
+  display:none;
+  border-style:solid;
+  border-width:10px;
+}
+
 #mainNav {
   border-color: rgba(34, 34, 34, 0.05);
   background-color: white;
@@ -67,14 +87,14 @@ section h2 {
 }
 
 #mainNav .navbar-brand {
-  color: #fdcc52;
+  color: #fff;
   font-family: 'Catamaran', 'Helvetica', 'Arial', 'sans-serif';
   font-weight: 200;
   letter-spacing: 1px;
 }
 
 #mainNav .navbar-brand:hover, #mainNav .navbar-brand:focus {
-  color: #fcbd20;
+  color: #fff;
 }
 
 #mainNav .navbar-toggler {
@@ -154,9 +174,7 @@ header.masthead {
   padding-top: 150px;
   padding-bottom: 100px;
   color: white;
-  background: url("../img/bg-pattern.png"), #7b4397;
-  background: url("../img/bg-pattern.png"), -webkit-linear-gradient(to left, #7b4397, #dc2430);
-  background: url("../img/bg-pattern.png"), linear-gradient(to left, #7b4397, #dc2430);
+
 }
 
 header.masthead .header-content {
