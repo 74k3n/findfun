@@ -90,19 +90,23 @@ function getCookie(name) {
         var login_response = jQuery.parseJSON(data);
         console.log(login_response);
 
-        if (login_response.user == "nouser"){
+        if(login_response.login == "Success") {
+          setTimeout( function() {
+            $('#login-modal').modal('toggle');
+            setTimeout( function() {
+              window.location.replace("/");
+            }, 500);
+          }, 500);
+        } else if (login_response.user == "nouser"){
           $('#no-user-error').fadeIn("slow", function() {
-        });
-        }
-        else if (login_response.user == "password wrong") {
+          });
+        } else if (login_response.user == "password wrong") {
           $('#password-error').fadeIn("slow", function() {
-        });
-        } 
-        else if ((login_response.user == "not active") && (login_response.username)) {
+          });
+        } else if ((login_response.user == "not active") && (login_response.username)) {
           $('#login-modal').modal('hide');
           document.getElementById(formId).reset();
-        }
-        else {
+        } else {
           if (login_response.login == "Failed") {
             alert("Invalid Login!");
           } else {
@@ -111,10 +115,6 @@ function getCookie(name) {
             alert("An error has occured!");
           }
         }
-
-        submitBtn.prop('disabled', false);
-        $('#spinner-login').css('display', 'none');
-
       },
       error: function(data) {
 
@@ -131,6 +131,7 @@ function getCookie(name) {
     var submitBtn = $(this).find('input[type=submit]');
     $('#username-exists-error').css('display','none');
     $('#e-mail-exists-error').css('display','none');
+    $('#e-mail-invalid-error').css('display','none');
     $('#password-short-error').css('display','none');
     $('#password-nomatch-error').css('display','none');
     submitBtn.prop('disabled', true);
@@ -147,6 +148,10 @@ function getCookie(name) {
         } 
         if (signup_response.email == "taken") {
           $('#e-mail-exists-error').fadeIn("slow", function() {
+          });
+        }
+        if (signup_response.email == "invalid") {
+          $('#e-mail-invalid-error').fadeIn("slow", function() {
           });
         }
         if (signup_response.password == "short") {
@@ -178,7 +183,6 @@ function getCookie(name) {
       },
       error: function(data) {
         $('#register-modal').modal('hide');
-        console.log('OSDIUHFOISDUFHGIDFGIO')
         alert("An error has occured!");
       }
     });

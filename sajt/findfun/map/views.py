@@ -5,6 +5,8 @@ from django.views import View
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
 class ProfileView(View):
 	def get(self, request, *args, **kwargs):
@@ -39,9 +41,9 @@ class Index(View):
 						else:
 							response_data['user'] = "not active"
 					else:
-						response_data = {'user':"password wrong"}
+						response_data = {'user' : "password wrong"}
 				except User.DoesNotExist:
-					response_data = {'user':"nouser"}
+					response_data = {'user' : "nouser"}
 
 			elif request.POST.get('classifier') == 'register':
 
@@ -58,15 +60,22 @@ class Index(View):
 						userE = User.objects.get(email = email)
 						response_data['email'] = 'taken'
 					except User.DoesNotExist:
-						if len(password) < 8:
-							response_data['password'] = 'short'
-						elif password != password_c:
-							response_data['password_c'] = 'nomatch'
-						else:
-							User.objects.create_user(username = username, password = password, email = email)
-							response_data = {'register' : 'Success'}
-							user = authenticate(request, username = username, password = password)
-							login(request, user)
+
+						try:
+							validate_email(email)
+							if len(password) < 8:
+								response_data['password'] = 'short'
+							elif password != password_c:
+								response_data['password_c'] = 'nomatch'
+							else:
+								User.objects.create_user(username = username, password = password, email = email)
+								response_data = {'register' : 'Success'}
+								user = authenticate(request, username = username, password = password)
+								login(request, user)
+						except ValidationError:
+							response_data['email'] = 'invalid'
+
+						
 
 		else:
 			username = password = ''
