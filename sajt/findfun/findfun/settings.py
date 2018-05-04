@@ -25,7 +25,7 @@ SECRET_KEY = '(4lca3*1z55w_%s-dkgbwgsa9dkhz7bx!d+x2ekvv^8d84o_$^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.1.104", "192.168.1.102"]
+ALLOWED_HOSTS = ["*" ]
 
 
 # Application definition
@@ -124,6 +124,18 @@ CUSTOM_MAP_SETTINGS = {
         ("mapCenterLocation", [60.7177013, -22.6300491]),
     ),
 }
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+            'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication'
+    ),
+}
+
 
 
 # Internationalization
