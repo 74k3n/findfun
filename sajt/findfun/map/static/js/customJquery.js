@@ -37,13 +37,13 @@
   }
 
 
-  function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-        infoWindow.setPosition(pos);
-        infoWindow.setContent(browserHasGeolocation ?
-                              'Error: The Geolocation service failed.' :
-                              'Error: Your browser doesn\'t support geolocation.');
-        infoWindow.open(map);
-      }
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+  infoWindow.setPosition(pos);
+  infoWindow.setContent(browserHasGeolocation ?
+    'Error: The Geolocation service failed.' :
+    'Error: Your browser doesn\'t support geolocation.');
+  infoWindow.open(map);
+}
 
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
@@ -82,7 +82,6 @@ function getCookie(name) {
     $('#no-user-error').css('display', 'none');
     e.preventDefault();
     $.ajax({
-
       type: "POST",
       data: $(this).serialize(),
       success: function(data){
@@ -97,16 +96,20 @@ function getCookie(name) {
               window.location.replace("/");
             }, 500);
           }, 500);
-        } else if (login_response.user == "nouser"){
+        } 
+        else if (login_response.user == "nouser"){
           $('#no-user-error').fadeIn("slow", function() {
           });
-        } else if (login_response.user == "password wrong") {
+        } 
+        else if (login_response.user == "password wrong") {
           $('#password-error').fadeIn("slow", function() {
           });
-        } else if ((login_response.user == "not active") && (login_response.username)) {
+        } 
+        else if ((login_response.user == "not active") && (login_response.username)) {
           $('#login-modal').modal('hide');
           document.getElementById(formId).reset();
-        } else {
+        } 
+        else {
           if (login_response.login == "Failed") {
             alert("Invalid Login!");
           } else {
@@ -157,7 +160,6 @@ function getCookie(name) {
         if (signup_response.password == "short") {
           $('#password-short-error').fadeIn("slow", function() {
           });
-
         }
         if (signup_response.password_c == "nomatch") {
             $('#password-nomatch-error').fadeIn("slow", function() {

@@ -5,6 +5,7 @@ from mapwidgets.widgets import GooglePointFieldWidget
 # Register your models here.
 
 class locationAdmin(admin.ModelAdmin):
+	list_display		= ('title', 'address', 'lattitude', 'longitude')
 	formfield_overrides = {
         models.PointField: {"widget": GooglePointFieldWidget}
     }
@@ -12,11 +13,11 @@ class locationAdmin(admin.ModelAdmin):
 admin.site.register(Location, locationAdmin)
 
 class eventAdmin(admin.ModelAdmin):
-	pass
+	list_display 		= ('title', 'datetime', 'location')
 
 admin.site.register(Event, eventAdmin)
 
 class ratingAdmin(admin.ModelAdmin):
-	pass
+	list_display 		= ('title', 'rating', 'location', 'user')
 
 admin.site.register(Rating, ratingAdmin)

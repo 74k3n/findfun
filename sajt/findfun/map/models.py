@@ -2,7 +2,6 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 from django.contrib import admin
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from datetime import datetime
 
@@ -17,19 +16,13 @@ class Location(models.Model):
 	created_at 		= models.DateTimeField(auto_now_add = True)
 	updated_at 		= models.DateTimeField(auto_now = True)
 
-	# events 		= models.ForeignKey("Event", blank = True, on_delete = models.DO_NOTHING)
-	# ratings 		= models.ForeignKey("Rating", blank = True, on_delete = models.DO_NOTHING)
-
-	def __str__(self):
-		return self.title
+	@property
+	def lattitude(self):
+		return self.point[1]
 
 	@property
 	def longitude(self):
 		return self.point[0]
-
-	@property
-	def lattitude(self):
-		return self.point[1]
 
 
 class Event(models.Model):
@@ -39,8 +32,6 @@ class Event(models.Model):
 	description 	= models.TextField(blank = True, null = True)
 	location 		= models.ForeignKey(Location, on_delete = models.CASCADE, null = True)
 
-	def __str__(self):
-		return self.title
 
 class Rating(models.Model):
 
@@ -62,6 +53,4 @@ class Rating(models.Model):
 	description 	= models.TextField(blank = True, null = True)
 	rating 			= models.IntegerField(choices = RATINGS, default = 5)
 	location 		= models.ForeignKey(Location, on_delete = models.CASCADE, null = True)
-
-	def __str__(self):
-		return self.title
+	user 			= models.ForeignKey(User, on_delete = models.CASCADE, null = True)
